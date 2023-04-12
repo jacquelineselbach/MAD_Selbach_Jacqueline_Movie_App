@@ -25,16 +25,16 @@ import coil.request.ImageRequest
 @Composable
 fun MoviePoster(
     posterUrl: String,
-    onFavoriteClick: (String) -> Unit,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit,
     onMovieClick: () -> Unit
 ) {
-    var isFavorite: Boolean by remember { mutableStateOf(false) }
-    val context = LocalContext.current
     val painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(context).data(data = posterUrl).apply {
+        ImageRequest.Builder(LocalContext.current).data(data = posterUrl).apply {
             crossfade(true)
         }.build()
     )
+    val favoriteState = rememberUpdatedState(isFavorite)
     Box(
         modifier = Modifier
             .height(250.dp)
@@ -55,15 +55,12 @@ fun MoviePoster(
             )
         }
         IconButton(
-            onClick = {
-                isFavorite = !isFavorite
-                onFavoriteClick(posterUrl)
-            },
+            onClick = { onFavoriteClick() },
             modifier = Modifier.align(alignment = Alignment.TopEnd)
         ) {
             Icon(
-                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites"
+                imageVector = if (favoriteState.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = if (favoriteState.value) "Remove from favorites" else "Add to favorites"
             )
         }
     }

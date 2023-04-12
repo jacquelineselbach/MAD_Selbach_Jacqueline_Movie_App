@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MAD_Movie_App</string>
+    <string name="enter_movie_title" />
+    <string name="enter_movie_year" />
+    <string name="select_genres" />
+    <string name="enter_director" />
+    <string name="enter_actors" />
+    <string name="enter_plot" />
+    <string name="enter_rating" />
 </resources>

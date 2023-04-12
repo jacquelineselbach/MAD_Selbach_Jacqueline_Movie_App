@@ -13,15 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
+import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.ui.theme.horizontalPadding
 import com.example.mad_movie_app.ui.theme.verticalPadding
 import com.example.mad_movie_app.ui.theme.weight
 
 @Composable
-fun MovieCardDetails(
-    movie: Movie,
-    isExpanded: Boolean,
-    onClick: () -> Unit) {
+fun MovieCardDetails(movie: Movie, isExpanded: Boolean, onClick: () -> Unit) {
 
     Row(
         modifier = Modifier
@@ -38,12 +36,13 @@ fun MovieCardDetails(
     }
 
     if (isExpanded) {
+
         Column(
             modifier = Modifier.padding(horizontal = horizontalPadding, vertical = verticalPadding)
         ) {
             Text(buildAnnotatedString("Director: ", movie.director))
             Text(buildAnnotatedString("Year: ", movie.year))
-            Text(buildAnnotatedString("Genre: ", movie.genre))
+            Text(buildAnnotatedString("Genre: ", movie.genres.joinToString(", ") { it.toString() }))
             Text(buildAnnotatedString("Actors: ", movie.actors))
             Divider(modifier = Modifier.padding(vertical = verticalPadding))
             Text(

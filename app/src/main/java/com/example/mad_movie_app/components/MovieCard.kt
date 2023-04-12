@@ -5,20 +5,23 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.mad_movie_app.data.Movie
 
 @Composable
 fun MovieCard(
     movie: Movie,
     isFavorite: Boolean,
     onMovieClick: (String) -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    isExpanded: MutableState<Boolean>,
+    onExpandClick: () -> Unit
 ) {
-    val expandedState = remember { mutableStateOf(false) }
-    val favoriteState = remember { mutableStateOf(isFavorite) }
+    val isFavoriteState = remember { mutableStateOf(isFavorite) }
 
     Card(
         modifier = Modifier
@@ -29,16 +32,18 @@ fun MovieCard(
     ) {
         Column {
             MoviePoster(
-                posterUrl = movie.images.first(),
+                posterUrl = movie.images.firstOrNull() ?: "https://www.saugertieslighthouse.com/slc/wp-content/themes/u-design/assets/images/placeholders/post-placeholder.jpg",
+                isFavorite = isFavoriteState.value,
+                onMovieClick = { onMovieClick(movie.id) },
                 onFavoriteClick = {
-                    favoriteState.value = !favoriteState.value
                     onFavoriteClick()
+                    isFavoriteState.value = !isFavoriteState.value
                 }
-            ) { onMovieClick(movie.id) }
+            )
             MovieCardDetails(
                 movie = movie,
-                isExpanded = expandedState.value,
-                onClick = { expandedState.value = !expandedState.value }
+                isExpanded = isExpanded.value,
+                onClick = onExpandClick
             )
         }
     }

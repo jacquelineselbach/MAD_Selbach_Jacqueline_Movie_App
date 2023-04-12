@@ -5,21 +5,31 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.example.mad_movie_app.data.MovieViewState
+import com.example.mad_movie_app.models.MovieViewModel
 
 @Composable
 fun MovieList(
-    movies: List<Movie>,
-    onMovieClick: (movieId: String) -> Unit) {
-
+    movieViewStates: List<MovieViewState>,
+    viewModel: MovieViewModel,
+    onMovieClick: (String) -> Unit,
+    onFavoriteClick: (String) -> Unit
+) {
     LazyColumn {
-        items(movies) { movie ->
-            val isFavorite = remember { mutableStateOf(true) }
+        items(movieViewStates) { movieViewState ->
+            val isExpanded = remember { mutableStateOf(false) }
+
+            println("Movie: ${movieViewState.movie}")
+
             MovieCard(
-                movie = movie,
-                onMovieClick = { onMovieClick(movie.id) },
-                onFavoriteClick = { isFavorite.value = !isFavorite.value },
-                isFavorite = isFavorite.value
-            )
+                movie = movieViewState.movie,
+                isFavorite = movieViewState.isFavorite,
+                onMovieClick = { onMovieClick(movieViewState.movie.id) },
+                onFavoriteClick = {
+                    onFavoriteClick(movieViewState.movie.id)
+                },
+                isExpanded = isExpanded
+            ) { isExpanded.value = !isExpanded.value }
         }
     }
 }
