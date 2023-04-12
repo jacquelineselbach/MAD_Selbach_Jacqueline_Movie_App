@@ -1,34 +1,49 @@
 package com.example.mad_movie_app.navigation
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.mad_movie_app.components.Movie
+import com.example.mad_movie_app.components.getMovies
+import com.example.mad_movie_app.screens.DetailScreen
+import com.example.mad_movie_app.screens.FavoriteScreen
+import com.example.mad_movie_app.screens.HomeScreen
+
+sealed class Screen(val route: String) {
+    object Home : Screen("homescreen")
+    object Detail : Screen("detailscreen/{movieId}")
+    object Favorite : Screen("favoritescreen")
+}
+
+fun getMovieById(id: String?): Movie? {
+    val movies = getMovies()
+    return movies.find { it.id == id }
+}
 
 @Composable
-fun TopBar() {
-    var showMenu by remember { mutableStateOf(false) }
+fun MyNavigation() {
 
-    TopAppBar(
-        title = { Text("Movies") },
-        actions = {
-            IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "Show menu")
-            }
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(onClick = {}) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Favorites")
-                        Text(" Favorites")
-                    }
-                }
-            }
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
+        composable(Screen.Home.route) {
+            HomeScreen(navController = navController)
         }
-    )
+        composable(
+            Screen.Detail.route,
+            arguments = listOf(navArgument("movieId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val selectedMovie = getMovieById(backStackEntry.arguments?.getString("movieId"))
+            DetailScreen(
+                navController = navController,
+                movie = selectedMovie
+            ) {}
+        }
+        composable(Screen.Favorite.route) {
+            FavoriteScreen(navController = navController)
+        }
+    }
 }

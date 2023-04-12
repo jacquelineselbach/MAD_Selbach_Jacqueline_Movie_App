@@ -4,7 +4,13 @@ import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+val horizontalPadding = 16.dp
+val verticalPadding = 16.dp
+val bottomPadding = 16.dp
+const val weight = 1f
 
 // Set of Material typography styles to start with
 val Typography = Typography(
