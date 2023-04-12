@@ -24,7 +24,6 @@ import coil.request.ImageRequest
 import com.example.mad_movie_app.models.Movie
 import com.example.mad_movie_app.models.getMovies
 
-
 @Composable
 fun MovieList() {
     val movies = getMovies()

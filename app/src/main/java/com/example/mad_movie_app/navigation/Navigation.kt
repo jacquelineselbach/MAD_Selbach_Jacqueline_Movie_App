@@ -1,10 +1,10 @@
 package com.example.mad_movie_app.navigation
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 
