@@ -3,14 +3,14 @@ package com.example.mad_movie_app.models
 import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.data.loadMovies
 import com.example.mad_movie_app.data.Genre
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import android.util.Log
+import com.example.mad_movie_app.data.MovieRepository
 
-class MovieViewModel : ViewModel() {
+class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repository) {
 
     private val _favoriteMovies = MutableStateFlow<List<Movie>>(listOf())
     val favoriteMovies: StateFlow<List<Movie>> = _favoriteMovies
@@ -23,11 +23,17 @@ class MovieViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _movies.value = loadMovies()
+            movieRepository.getMovies().collect { moviesList ->
+                _movies.value = moviesList
+            }
+            movieRepository.initializeMovies()
         }
     }
 
     fun addMovie(movie: Movie) {
+        viewModelScope.launch {
+            movieRepository.addMovie(movie) // Use the repository to add a movie
+        }
         _movies.value = _movies.value.plus(movie)
         Log.d(TAG, "Movie added: $movie")
     }

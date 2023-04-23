@@ -1,8 +1,11 @@
 package com.example.mad_movie_app.data
 
-import java.io.Serializable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "movies")
 data class Movie(
+    @PrimaryKey
     val id: String,
     val title: String,
     val year: String,
@@ -11,11 +14,18 @@ data class Movie(
     val plot: String,
     val actors: String,
     val rating: Float,
-    val images: List<String>
-) : Serializable
+    val images: List<String>,
+    val favorite: Boolean = false
+)
 
 fun loadMovies(): List<Movie> {
     return getMovies()
+}
+
+fun getDefaultMovies(): List<Movie> {
+    return listOf(
+        // The list of default movies.
+    )
 }
 
 fun getMovies(): List<Movie> {
