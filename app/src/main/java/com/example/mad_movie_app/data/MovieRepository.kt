@@ -24,6 +24,11 @@ class MovieRepository(private val movieDao: MovieDao) {
         movieDao.insertMovie(movie)
     }
 
+    suspend fun deleteMovie(movieId: Movie) {
+        movieDao.deleteMovie(movieId)
+    }
+
+
     suspend fun toggleFavorite(movieId: String) {
         movieDao.toggleFavorite(movieId)
     }

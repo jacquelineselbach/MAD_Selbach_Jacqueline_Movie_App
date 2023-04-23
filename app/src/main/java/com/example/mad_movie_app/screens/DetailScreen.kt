@@ -6,9 +6,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,10 +18,11 @@ import coil.request.ImageRequest
 import com.example.mad_movie_app.components.MovieCard
 import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.models.MovieViewModel
-import com.example.mad_movie_app.navigation.SimpleAppBar
+import com.example.mad_movie_app.navigation.DeleteAppBar
 import com.example.mad_movie_app.ui.theme.bottomPadding
 import com.example.mad_movie_app.ui.theme.horizontalPadding
 import com.example.mad_movie_app.ui.theme.verticalPadding
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(
@@ -33,13 +32,22 @@ fun DetailScreen(
 ) {
     val isExpanded = remember { mutableStateOf(false) }
     val isFavorite = rememberSaveable { mutableStateOf(viewModel.isFavoriteMovie(movie?.id ?: "")) }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        SimpleAppBar(title = movie?.title ?: "Invalid selection") {
-            navController.popBackStack()
-        }
+        DeleteAppBar(
+            title = movie?.title ?: "Invalid selection",
+            onDeleteClick = {
+                coroutineScope.launch {
+                    viewModel.deleteMovie(movie ?: return@launch)
+                }
+                navController.popBackStack()
+            },
+            onBackClick = { navController.popBackStack() },
+            coroutineScope = coroutineScope
+        )
 
         movie?.let {
             MovieCard(

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
+import com.example.mad_movie_app.navigation.SimpleAppBar
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -28,12 +29,6 @@ fun AddMovieScreen(navController: NavHostController, viewModel: MovieViewModel, 
 
     val isFormValid by viewModel.isFormValid.collectAsState(initial = false)
 
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(10.dp)
-    ) {
 
         Column(
             modifier = Modifier
@@ -41,6 +36,12 @@ fun AddMovieScreen(navController: NavHostController, viewModel: MovieViewModel, 
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
+
+            Box(modifier = Modifier.fillMaxWidth()) {
+                SimpleAppBar(title = "Add Movie") {
+                    navController.popBackStack()
+                }
+            }
 
             var title by remember {
                 mutableStateOf("Title")
@@ -207,4 +208,3 @@ fun AddMovieScreen(navController: NavHostController, viewModel: MovieViewModel, 
             }
         }
     }
-}

@@ -1,11 +1,13 @@
 package com.example.mad_movie_app.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "movies")
 data class Movie(
     @PrimaryKey
+    @ColumnInfo(name = "id")
     val id: String,
     val title: String,
     val year: String,
@@ -15,6 +17,7 @@ data class Movie(
     val actors: String,
     val rating: Float,
     val images: List<String>,
+    @ColumnInfo(name = "favorite")
     val favorite: Boolean = false
 )
 

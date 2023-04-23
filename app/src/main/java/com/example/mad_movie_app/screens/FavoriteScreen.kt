@@ -47,13 +47,14 @@ fun FavoriteScreen(navController: NavHostController, viewModel: MovieViewModel, 
                     MovieCard(
                         movie = movie,
                         isFavorite = viewModel.isFavoriteMovie(movie.id),
-                        onMovieClick = onMovieClick,
+                        onMovieClick = { onMovieClick(movie.id) }, // Call onMovieClick with movie.id
                         onFavoriteClick = {
                             viewModel.toggleFavorite(movie.id)
                         },
                         isExpanded = isExpanded,
                         onExpandClick = { isExpanded.value = !isExpanded.value }
                     )
+
                 }
             }
         }

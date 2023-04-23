@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import android.util.Log
 import com.example.mad_movie_app.data.MovieRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repository) {
 
@@ -75,4 +77,15 @@ class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repositor
     fun isFavoriteMovie(movieId: String): Boolean {
         return _favoriteMovies.value.any { it.id == movieId }
     }
+
+    suspend fun deleteMovie(movie: Movie) {
+        withContext(Dispatchers.IO) {
+            movieRepository.deleteMovie(movie)
+        }
+        // Remove the movie from the favorite list if it exists
+        if (_favoriteMovies.value.contains(movie)) {
+            _favoriteMovies.value = _favoriteMovies.value.filter { it != movie }
+        }
+    }
+
 }

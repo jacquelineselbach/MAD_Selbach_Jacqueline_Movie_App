@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel(movieRepository: MovieRepository) : BaseMovieViewModel(movieRepository) {
-    private val _favoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
-    val favoriteMovies: StateFlow<List<Movie>> = _favoriteMovies
+class FavoriteViewModel(movieViewModel: MovieViewModel) : BaseMovieViewModel(movieViewModel.movieRepository) {
+    private val _favoriteMovies = MutableStateFlow<Set<Movie>>(emptySet())
+    val favoriteMovies: StateFlow<Set<Movie>> = _favoriteMovies
 
     init {
         viewModelScope.launch {
-            movieRepository.getFavoriteMovies().collect { movies ->
-                _favoriteMovies.value = movies
+            movieViewModel.movies.collect { movies ->
+                _favoriteMovies.value = movies.filter { it.favorite }.toSet()
             }
         }
     }

@@ -1,10 +1,6 @@
 package com.example.mad_movie_app.data
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -33,4 +29,16 @@ interface MovieDao {
 
     @Query("SELECT COUNT(*) FROM movies")
     suspend fun getMovieCount(): Int
+
+    @Update
+    suspend fun updateMovie(movie: Movie)
+
+    @Delete
+    suspend fun deleteMovie(movie: Movie)
+
+    @Query("DELETE FROM movies WHERE id = :movieId")
+    suspend fun deleteMovieById(movieId: String)
+
+
+
 }
