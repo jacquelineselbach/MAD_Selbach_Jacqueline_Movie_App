@@ -20,7 +20,7 @@ import com.example.mad_movie_app.navigation.SimpleAppBar
 
 @Composable
 fun FavoriteScreen(navController: NavHostController, viewModel: MovieViewModel, onMovieClick: (String) -> Unit) {
-    val favoriteMovies = viewModel.favoriteMovies.collectAsState().value
+    val favoriteMovies = viewModel.favoriteMovies.collectAsState()
     val lazyListState = rememberLazyListState()
 
     Column(
@@ -31,7 +31,7 @@ fun FavoriteScreen(navController: NavHostController, viewModel: MovieViewModel, 
             onBackClick = { navController.popBackStack() }
         )
 
-        if (favoriteMovies.isEmpty()) {
+        if (favoriteMovies.value.isEmpty()) {
             Text(
                 text = "You have not added any favorite movies yet!",
                 modifier = Modifier.padding(16.dp)
@@ -41,7 +41,7 @@ fun FavoriteScreen(navController: NavHostController, viewModel: MovieViewModel, 
                 state = lazyListState,
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(favoriteMovies, key = { movie -> movie.id }) { movie -> // Use the key parameter here
+                items(favoriteMovies.value.toList(), key = { movie -> movie.id }) { movie -> // Use the key parameter here
                     val isExpanded = remember { mutableStateOf(false) }
 
                     MovieCard(

@@ -26,9 +26,7 @@ fun loadMovies(): List<Movie> {
 }
 
 fun getDefaultMovies(): List<Movie> {
-    return listOf(
-        // The list of default movies.
-    )
+    return getMovies()
 }
 
 fun getMovies(): List<Movie> {

@@ -5,6 +5,8 @@ import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.data.MovieRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toSet
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(movieViewModel: MovieViewModel) : BaseMovieViewModel(movieViewModel.movieRepository) {
@@ -13,9 +15,22 @@ class FavoriteViewModel(movieViewModel: MovieViewModel) : BaseMovieViewModel(mov
 
     init {
         viewModelScope.launch {
-            movieViewModel.movies.collect { movies ->
-                _favoriteMovies.value = movies.filter { it.favorite }.toSet()
+            movieRepository.getFavoriteMovies().collect { movies ->
+                _favoriteMovies.value = movies.toSet()
+            }
+        }
+    }
+
+    fun toggleFavorite(id: String) {
+        viewModelScope.launch {
+            val favoriteMovie = _favoriteMovies.value.find { it.id == id }
+            if (favoriteMovie != null) {
+                val updatedFavorite = favoriteMovie.copy(favorite = !favoriteMovie.favorite)
+                _favoriteMovies.value = _favoriteMovies.value - favoriteMovie + updatedFavorite
+                movieRepository.updateFavorite(id, updatedFavorite.favorite)
             }
         }
     }
 }
+
+

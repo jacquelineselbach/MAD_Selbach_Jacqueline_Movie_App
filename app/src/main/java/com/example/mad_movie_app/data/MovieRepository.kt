@@ -1,9 +1,9 @@
 package com.example.mad_movie_app.data
 
-import com.example.mad_movie_app.data.Movie
-import com.example.mad_movie_app.data.MovieDao
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 
 class MovieRepository(private val movieDao: MovieDao) {
@@ -20,6 +20,16 @@ class MovieRepository(private val movieDao: MovieDao) {
         return movieDao.getFavoriteMovies()
     }
 
+    suspend fun updateFavorite(movieId: String, isFavorite: Boolean) {
+        withContext(Dispatchers.IO) {
+            val movie = movieDao.getMovieById(movieId).firstOrNull()
+            if (movie != null) {
+                val updatedMovie = movie.copy(favorite = isFavorite)
+                movieDao.updateMovie(updatedMovie)
+            }
+        }
+    }
+
     suspend fun addMovie(movie: Movie) {
         movieDao.insertMovie(movie)
     }
@@ -28,20 +38,27 @@ class MovieRepository(private val movieDao: MovieDao) {
         movieDao.deleteMovie(movieId)
     }
 
-
     suspend fun toggleFavorite(movieId: String) {
-        movieDao.toggleFavorite(movieId)
-    }
-
-    fun isFavoriteMovie(movieId: String): Boolean {
-        return movieDao.isFavoriteMovie(movieId)
+        withContext(Dispatchers.IO) {
+            val movie = movieDao.getMovieById(movieId).firstOrNull()
+            if (movie != null) {
+                val updatedMovie = movie.copy(favorite = !movie.favorite)
+                movieDao.updateMovie(updatedMovie)
+            }
+        }
     }
 
     suspend fun initializeMovies() {
         withContext(Dispatchers.IO) {
             if (movieDao.getMovieCount() == 0) {
+                Log.d("MovieRepository", "Initializing default movies")
                 movieDao.insertMovies(getDefaultMovies())
+                Log.d("MovieRepository", "Default movies inserted")
+            } else {
+                Log.d("MovieRepository", "Movies already in database")
             }
         }
     }
+
+
 }

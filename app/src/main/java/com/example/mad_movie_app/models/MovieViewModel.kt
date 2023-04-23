@@ -14,8 +14,10 @@ import kotlinx.coroutines.withContext
 
 class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repository) {
 
-    private val _favoriteMovies = MutableStateFlow<List<Movie>>(listOf())
-    val favoriteMovies: StateFlow<List<Movie>> = _favoriteMovies
+    val favoriteMovies: StateFlow<Set<Movie>>
+        get() = _favoriteMovies
+
+    private val _favoriteMovies = MutableStateFlow<Set<Movie>>(emptySet())
 
     private val _movies = MutableStateFlow(loadMovies())
     val movies: StateFlow<List<Movie>> = _movies
@@ -25,12 +27,18 @@ class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repositor
 
     init {
         viewModelScope.launch {
-            movieRepository.getMovies().collect { moviesList ->
-                _movies.value = moviesList
+            movieRepository.getMovies().collect { movies ->
+                Log.d("MovieViewModel", "Movies loaded: ${movies.size}")
+                _movies.value = movies
             }
-            movieRepository.initializeMovies()
+            movieRepository.getFavoriteMovies().collect { movies ->
+                Log.d("MovieViewModel", "Favorite movies loaded: ${movies.size}")
+                _favoriteMovies.value = movies.toSet()
+            }
         }
     }
+
+
 
     fun addMovie(movie: Movie) {
         viewModelScope.launch {
@@ -67,9 +75,9 @@ class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repositor
         val movie = movies.value.find { it.id == movieId }
         movie?.let {
             if (isFavoriteMovie(movieId)) {
-                _favoriteMovies.value = _favoriteMovies.value.filter { it.id != movieId }
+                _favoriteMovies.value = (_favoriteMovies.value - movie).toSet()
             } else {
-                _favoriteMovies.value = _favoriteMovies.value + movie
+                _favoriteMovies.value = (_favoriteMovies.value + movie).toSet()
             }
         }
     }
@@ -84,8 +92,7 @@ class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repositor
         }
         // Remove the movie from the favorite list if it exists
         if (_favoriteMovies.value.contains(movie)) {
-            _favoriteMovies.value = _favoriteMovies.value.filter { it != movie }
+            _favoriteMovies.value = (_favoriteMovies.value - movie).toSet()
         }
     }
-
 }
