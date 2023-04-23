@@ -57,6 +57,7 @@ fun DetailScreen(
                 onFavoriteClick = {
                     viewModel.toggleFavorite(movie.id)
                     isFavorite.value = viewModel.isFavoriteMovie(movie.id)
+                    viewModel.updateMovie(movie.copy(favorite = isFavorite.value))
                 },
                 isExpanded = isExpanded
             ) { isExpanded.value = !isExpanded.value }

@@ -12,6 +12,15 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE id = :movieId")
     fun getMovieById(movieId: String): Flow<Movie?>
 
+    @Update
+    suspend fun updateMovie(movie: Movie)
+
+    @Delete
+    suspend fun deleteMovie(movie: Movie)
+
+    @Query("DELETE FROM movies WHERE id = :movieId")
+    suspend fun deleteMovieById(movieId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: Movie)
 
@@ -29,16 +38,5 @@ interface MovieDao {
 
     @Query("SELECT COUNT(*) FROM movies")
     suspend fun getMovieCount(): Int
-
-    @Update
-    suspend fun updateMovie(movie: Movie)
-
-    @Delete
-    suspend fun deleteMovie(movie: Movie)
-
-    @Query("DELETE FROM movies WHERE id = :movieId")
-    suspend fun deleteMovieById(movieId: String)
-
-
 
 }

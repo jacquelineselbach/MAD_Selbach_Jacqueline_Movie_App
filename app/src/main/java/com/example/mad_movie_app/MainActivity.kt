@@ -28,11 +28,6 @@ class MainActivity : ComponentActivity() {
         // Instantiate the repository with the MovieDao instance
         val repository = MovieRepository(movieDao)
 
-        // Initialize movies only if the database is empty
-        runBlocking {
-            repository.initializeMovies()
-        }
-
         // Instantiate the ViewModel using the factory
         viewModel = ViewModelProvider(this, MovieViewModelFactory(repository)).get(MovieViewModel::class.java)
 

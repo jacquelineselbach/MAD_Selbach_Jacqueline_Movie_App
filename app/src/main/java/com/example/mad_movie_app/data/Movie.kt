@@ -9,21 +9,25 @@ data class Movie(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: String,
+    @ColumnInfo(name = "title")
     val title: String,
+    @ColumnInfo(name = "year")
     val year: String,
+    @ColumnInfo(name = "director")
     val director: String,
+    @ColumnInfo(name = "genres")
     val genres: List<Genre>,
+    @ColumnInfo(name = "plot")
     val plot: String,
+    @ColumnInfo(name = "actors")
     val actors: String,
+    @ColumnInfo(name = "rating")
     val rating: Float,
+    @ColumnInfo(name = "images")
     val images: List<String>,
     @ColumnInfo(name = "favorite")
     val favorite: Boolean = false
 )
-
-fun loadMovies(): List<Movie> {
-    return getMovies()
-}
 
 fun getDefaultMovies(): List<Movie> {
     return getMovies()
@@ -167,4 +171,8 @@ fun getMovies(): List<Movie> {
             rating = 9.5F
         ),
         )
+}
+
+fun loadMovies(): List<Movie> {
+    return getMovies()
 }

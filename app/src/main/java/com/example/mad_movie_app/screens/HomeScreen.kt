@@ -36,11 +36,9 @@ fun HomeScreen(navController: NavController, viewModel: MovieViewModel) {
             movieViewStates = movieViewStates,
             onMovieClick = { movieId: String ->
                 navController.navigate(Screen.Detail.route.replace("{movieId}", movieId))
-            },
-            onFavoriteClick = { movieId: String ->
-                viewModel.toggleFavorite(movieId)
-            },
-            viewModel = viewModel
-        )
+            }
+        ) { movieId: String ->
+            viewModel.toggleFavorite(movieId)
+        }
     }
 }

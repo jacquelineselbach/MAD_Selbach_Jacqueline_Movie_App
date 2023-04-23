@@ -38,16 +38,6 @@ class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repositor
         }
     }
 
-
-
-    fun addMovie(movie: Movie) {
-        viewModelScope.launch {
-            movieRepository.addMovie(movie) // Use the repository to add a movie
-        }
-        _movies.value = _movies.value.plus(movie)
-        Log.d(TAG, "Movie added: $movie")
-    }
-
     companion object {
         const val TAG = "MovieViewModel"
     }
@@ -84,6 +74,20 @@ class MovieViewModel(repository: MovieRepository) : BaseMovieViewModel(repositor
 
     fun isFavoriteMovie(movieId: String): Boolean {
         return _favoriteMovies.value.any { it.id == movieId }
+    }
+
+    fun updateMovie(movie: Movie) {
+        viewModelScope.launch {
+            movieRepository.updateMovie(movie)
+        }
+    }
+
+    fun addMovie(movie: Movie) {
+        viewModelScope.launch {
+            movieRepository.addMovie(movie) // Use the repository to add a movie
+        }
+        _movies.value = _movies.value.plus(movie)
+        Log.d(TAG, "Movie added: $movie")
     }
 
     suspend fun deleteMovie(movie: Movie) {

@@ -41,13 +41,13 @@ fun FavoriteScreen(navController: NavHostController, viewModel: MovieViewModel, 
                 state = lazyListState,
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(favoriteMovies.value.toList(), key = { movie -> movie.id }) { movie -> // Use the key parameter here
+                items(favoriteMovies.value.toList(), key = { movie -> movie.id }) { movie ->
                     val isExpanded = remember { mutableStateOf(false) }
 
                     MovieCard(
                         movie = movie,
                         isFavorite = viewModel.isFavoriteMovie(movie.id),
-                        onMovieClick = { onMovieClick(movie.id) }, // Call onMovieClick with movie.id
+                        onMovieClick = { onMovieClick(movie.id) },
                         onFavoriteClick = {
                             viewModel.toggleFavorite(movie.id)
                         },

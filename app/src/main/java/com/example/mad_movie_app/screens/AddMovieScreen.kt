@@ -1,5 +1,6 @@
 package com.example.mad_movie_app.screens
 
+import android.annotation.SuppressLint
 import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.R
 import com.example.mad_movie_app.data.Genre
@@ -23,12 +24,12 @@ import androidx.navigation.NavHostController
 import com.example.mad_movie_app.navigation.SimpleAppBar
 import java.util.*
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddMovieScreen(navController: NavHostController, viewModel: MovieViewModel, modifier: Modifier = Modifier) {
 
     val isFormValid by viewModel.isFormValid.collectAsState(initial = false)
-
 
         Column(
             modifier = Modifier

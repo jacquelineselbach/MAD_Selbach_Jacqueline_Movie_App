@@ -6,12 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.mad_movie_app.data.MovieViewState
-import com.example.mad_movie_app.models.MovieViewModel
 
 @Composable
 fun MovieList(
     movieViewStates: List<MovieViewState>,
-    viewModel: MovieViewModel,
     onMovieClick: (String) -> Unit,
     onFavoriteClick: (String) -> Unit
 ) {
