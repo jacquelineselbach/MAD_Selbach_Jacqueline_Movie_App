@@ -3,27 +3,33 @@ package com.example.mad_movie_app.models
 import androidx.lifecycle.viewModelScope
 import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.data.MovieRepository
-import com.example.mad_movie_app.factories.DetailScreenFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * DetailScreenViewModel is a ViewModel class responsible for managing data and operations specific to the detail screen.
+ *
+ * @param movieRepository A MovieRepository instance to interact with the movie data.
+ * @param movieId The ID of the movie to be displayed on the detail screen.
+ * @param sharedFavoriteViewModel A SharedFavoriteViewModel instance to manage favorite movies.
+ */
+
 class DetailScreenViewModel(movieRepository: MovieRepository, movieId: String, private val sharedFavoriteViewModel: SharedFavoriteViewModel) : MovieViewModel(movieRepository, sharedFavoriteViewModel) {
 
-    companion object {
-        fun createFactory(movieRepository: MovieRepository, movieId: String, sharedFavoriteViewModel: SharedFavoriteViewModel): DetailScreenFactory {
-            return DetailScreenFactory(movieRepository, movieId, sharedFavoriteViewModel)
-        }
-    }
-
+    // declare private MutableStateFlow to hold the movie object for the detail screen
     private val _movie = MutableStateFlow<Movie?>(null)
+
+    // expose immutable StateFlow to provide access to the movie object
     val movie: StateFlow<Movie?> = _movie
 
+    // override favoriteMovies property to return the favoriteSet from the superclass
     override val favoriteMovies: StateFlow<Set<Movie>>
-        get() = _favoriteMovies
+        get() = favoriteSet
 
+    // initialize ViewModel by loading the movie with the specified movieId from the repository
     init {
         viewModelScope.launch {
             movieRepository.getMovieById(movieId).collect { movie ->
@@ -32,29 +38,24 @@ class DetailScreenViewModel(movieRepository: MovieRepository, movieId: String, p
         }
     }
 
+    // override toggleFavorite() method to use sharedFavoriteViewModel
+    override fun toggleFavorite(movieId: String) {
+        sharedFavoriteViewModel.toggleFavorite(movieId)
+    }
+
+    // override isFavoriteMovie() method to use sharedFavoriteViewModel
     override fun isFavoriteMovie(movieId: String): Boolean {
-        return _favoriteMovies.value.any { it.id == movieId }
+        return sharedFavoriteViewModel.isFavoriteMovie(movieId)
     }
 
-    fun toggleFavorite() {
-        viewModelScope.launch {
-            _movie.value?.id?.let { movieRepository.toggleFavorite(it) }
-        }
-    }
-
+    // override deleteMovie() method to delete the movie and update the favorite set
     override suspend fun deleteMovie(movie: Movie) {
         withContext(Dispatchers.IO) {
             movieRepository.deleteMovie(movie)
         }
-        // Remove the movie from the favorite list if it exists
-        if (_favoriteMovies.value.contains(movie)) {
-            _favoriteMovies.value = (_favoriteMovies.value - movie).toSet()
+        if (favoriteSet.value.contains(movie)) {
+            favoriteSet.value = (favoriteSet.value - movie).toSet()
         }
     }
 
-    fun updateMovie(movie: Movie) {
-        viewModelScope.launch {
-            movieRepository.updateMovie(movie)
-        }
-    }
 }

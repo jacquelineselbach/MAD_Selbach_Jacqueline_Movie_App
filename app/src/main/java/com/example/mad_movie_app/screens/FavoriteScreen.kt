@@ -18,10 +18,21 @@ import com.example.mad_movie_app.components.MovieCard
 import com.example.mad_movie_app.models.SharedFavoriteViewModel
 import com.example.mad_movie_app.navigation.SimpleAppBar
 
+/**
+ * Composable function displaying the Favorite Screen and the user's favorite movies.
+ *
+ * @param navController the navigation controller used for navigating to other screens.
+ * @param viewModel the [SharedFavoriteViewModel] used to manage the favorite movies data.
+ * @param onMovieClick the callback function to execute when a movie is clicked.
+ */
+
 @Composable
 fun FavoriteScreen(navController: NavHostController, viewModel: SharedFavoriteViewModel, onMovieClick: (String) -> Unit) {
 
+    // observe the favorite movies from the ViewModel
     val favoriteMovies = viewModel.favoriteMovies.collectAsState()
+
+    // remember the LazyListState for the LazyColumn
     val lazyListState = rememberLazyListState()
 
     Column(
@@ -32,17 +43,21 @@ fun FavoriteScreen(navController: NavHostController, viewModel: SharedFavoriteVi
             onBackClick = { navController.popBackStack() }
         )
 
+        // if the list of favorite movies is empty, display a message to the user
         if (favoriteMovies.value.isEmpty()) {
             Text(
                 text = "You have not added any favorite movies yet!",
                 modifier = Modifier.padding(16.dp)
             )
         } else {
+            // otherwise, display the list of favorite movies in a LazyColumn
+            // LazyColumn only composes the visible items on the screen
             LazyColumn(
                 state = lazyListState,
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(favoriteMovies.value.toList(), key = { movie -> movie.id }) { movie ->
+                    // remember whether the MovieCard is expanded or not
                     val isExpanded = remember { mutableStateOf(false) }
 
                     MovieCard(

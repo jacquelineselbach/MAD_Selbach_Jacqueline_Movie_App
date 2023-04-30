@@ -11,6 +11,14 @@ import androidx.compose.runtime.Composable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * DeleteAppBar is a composable function that renders a custom AppBar with a delete icon and a back icon.
+ *
+ * @param title the title of the AppBar.
+ * @param onDeleteClick lambda function to be executed when the delete icon is clicked.
+ * @param onBackClick lambda function to be executed when the back icon is clicked.
+ * @param coroutineScope the CoroutineScope used for launching the onDeleteClick lambda in a coroutine.
+ */
 @Composable
 fun DeleteAppBar(
     title: String,
@@ -18,15 +26,19 @@ fun DeleteAppBar(
     onBackClick: () -> Unit,
     coroutineScope: CoroutineScope
 ) {
+    // TopAppBar containing title, back icon, and delete icon
     TopAppBar(
         title = { Text(text = title) },
         navigationIcon = {
+            // Back icon with a click listener
             IconButton(onClick = onBackClick) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {
+            // delete icon with a click listener
             IconButton(onClick = {
+                // launch the onDeleteClick lambda in a coroutine
                 coroutineScope.launch {
                     onDeleteClick()
                 }

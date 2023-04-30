@@ -24,24 +24,43 @@ import com.example.mad_movie_app.ui.theme.horizontalPadding
 import com.example.mad_movie_app.ui.theme.verticalPadding
 import kotlinx.coroutines.launch
 
+/**
+ *
+ * Composable function displaying the Detail Screen with information about the selected movie.
+ *
+ * @param navController the navigation controller used to navigate to other screens.
+ * @param movie the selected [Movie] object.
+ * @param detailScreenViewModel the [DetailScreenViewModel] used for displaying detail information as well as deleting a movie from the database.
+ * @param viewModel the [SharedFavoriteViewModel] used to manage the favorite movies data.
+ */
+
 @Composable
 fun DetailScreen(
     navController: NavHostController,
     movie: Movie?,
     detailScreenViewModel: DetailScreenViewModel,
-    sharedFavoriteViewModel: SharedFavoriteViewModel
+    viewModel: SharedFavoriteViewModel
 ) {
+    // remember whether the MovieCard is expanded or not
     val isExpanded = remember { mutableStateOf(false) }
-    val isFavorite by remember(movie?.id) { derivedStateOf { sharedFavoriteViewModel.isFavoriteMovie(movie?.id ?: "") } }
+
+    // observe whether the movie is favorite or not
+    val isFavorite by remember(movie?.id) {
+        derivedStateOf { viewModel.isFavoriteMovie(movie?.id ?: "") }
+    }
+
+    // remember a CoroutineScope to launch coroutines
     val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        // display the DeleteAppBar with the movie title, a back button and a delete button
         DeleteAppBar(
             title = movie?.title ?: "Invalid selection",
             onDeleteClick = {
                 coroutineScope.launch {
+                    // launch a coroutine to delete the movie from the repository
                     detailScreenViewModel.deleteMovie(movie ?: return@launch)
                 }
                 navController.popBackStack()
@@ -50,17 +69,22 @@ fun DetailScreen(
             coroutineScope = coroutineScope
         )
 
+        // if the movie is not null, display the movie information and images
         movie?.let {
             MovieCard(
                 movie = it,
                 isFavorite = isFavorite,
                 onMovieClick = {},
                 onFavoriteClick = {
-                    sharedFavoriteViewModel.toggleFavorite(it.id)
+                    viewModel.toggleFavorite(it.id)
                 },
                 isExpanded = isExpanded
-            ) { isExpanded.value = !isExpanded.value }
+            ) {
+                // toggle the isExpanded state when the user taps the card
+                isExpanded.value = !isExpanded.value
+            }
 
+            // display a divider and a header for the images
             Divider(modifier = Modifier.padding(verticalPadding))
             Text(
                 text = "Movie Images",
@@ -70,6 +94,7 @@ fun DetailScreen(
                     .padding(bottomPadding)
             )
 
+            // if the movie has more than one image, display them in a LazyRow
             if (it.images.size > 1) {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -101,6 +126,7 @@ fun DetailScreen(
                 }
             }
         } ?: run {
+            // if the movie is null, display a message to the user
             Text(text = "Invalid movie selection")
         }
     }

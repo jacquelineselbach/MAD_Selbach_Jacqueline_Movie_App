@@ -9,13 +9,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * SharedFavoriteViewModel is a ViewModel class responsible for managing favorite movies data and operations.
+ *
+ * @param movieRepository A MovieRepository instance to interact with the movie data.
+ */
+
 class SharedFavoriteViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
+    // Declare a private MutableStateFlow to hold the favorite movies set
     private val _favoriteMovies = MutableStateFlow<Set<Movie>>(emptySet())
 
+    // Expose an immutable StateFlow to provide access to the favorite movies set
     val favoriteMovies: StateFlow<Set<Movie>>
         get() = _favoriteMovies
 
+    // Initialize the ViewModel by loading favorite movies from the repository
     init {
         viewModelScope.launch {
             movieRepository.getFavoriteMovies().collect { movies ->
@@ -24,6 +33,12 @@ class SharedFavoriteViewModel(private val movieRepository: MovieRepository) : Vi
             }
         }
     }
+
+    /**
+     * toggleFavorite(): Toggles the favorite status of a movie with the given movieId.
+     *
+     * @param movieId The ID of the movie to toggle its favorite status.
+     */
 
     fun toggleFavorite(movieId: String) {
         viewModelScope.launch {
@@ -38,6 +53,13 @@ class SharedFavoriteViewModel(private val movieRepository: MovieRepository) : Vi
             }
         }
     }
+
+    /**
+     * isFavoriteMovie(): checks if a movie with the given movieId is in the favorite movies set.
+     *
+     * @param movieId The ID of the movie to check its favorite status.
+     * @return True if the movie is in the favorite movies set, false otherwise.
+     */
 
     fun isFavoriteMovie(movieId: String): Boolean {
         return _favoriteMovies.value.any { it.id == movieId }
