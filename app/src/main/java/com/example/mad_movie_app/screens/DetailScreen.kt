@@ -17,7 +17,8 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.mad_movie_app.components.MovieCard
 import com.example.mad_movie_app.data.Movie
-import com.example.mad_movie_app.models.MovieViewModel
+import com.example.mad_movie_app.models.DetailScreenViewModel
+import com.example.mad_movie_app.models.SharedFavoriteViewModel
 import com.example.mad_movie_app.navigation.DeleteAppBar
 import com.example.mad_movie_app.ui.theme.bottomPadding
 import com.example.mad_movie_app.ui.theme.horizontalPadding
@@ -28,10 +29,11 @@ import kotlinx.coroutines.launch
 fun DetailScreen(
     navController: NavHostController,
     movie: Movie?,
-    viewModel: MovieViewModel
+    detailScreenViewModel: DetailScreenViewModel,
+    sharedFavoriteViewModel: SharedFavoriteViewModel
 ) {
     val isExpanded = remember { mutableStateOf(false) }
-    val isFavorite = rememberSaveable { mutableStateOf(viewModel.isFavoriteMovie(movie?.id ?: "")) }
+    val isFavorite = rememberSaveable { mutableStateOf(detailScreenViewModel.isFavoriteMovie(movie?.id ?: "")) }
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -41,7 +43,7 @@ fun DetailScreen(
             title = movie?.title ?: "Invalid selection",
             onDeleteClick = {
                 coroutineScope.launch {
-                    viewModel.deleteMovie(movie ?: return@launch)
+                    detailScreenViewModel.deleteMovie(movie ?: return@launch)
                 }
                 navController.popBackStack()
             },
@@ -55,9 +57,9 @@ fun DetailScreen(
                 isFavorite = isFavorite.value,
                 onMovieClick = {},
                 onFavoriteClick = {
-                    viewModel.toggleFavorite(movie.id)
-                    isFavorite.value = viewModel.isFavoriteMovie(movie.id)
-                    viewModel.updateMovie(movie.copy(favorite = isFavorite.value))
+                    detailScreenViewModel.toggleFavorite()
+                    isFavorite.value = detailScreenViewModel.isFavoriteMovie(movie.id)
+                    detailScreenViewModel.updateMovie(movie.copy(favorite = isFavorite.value))
                 },
                 isExpanded = isExpanded
             ) { isExpanded.value = !isExpanded.value }

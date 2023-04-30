@@ -15,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mad_movie_app.components.MovieCard
-import com.example.mad_movie_app.models.MovieViewModel
+import com.example.mad_movie_app.models.SharedFavoriteViewModel
 import com.example.mad_movie_app.navigation.SimpleAppBar
 
 @Composable
-fun FavoriteScreen(navController: NavHostController, viewModel: MovieViewModel, onMovieClick: (String) -> Unit) {
+fun FavoriteScreen(navController: NavHostController, viewModel: SharedFavoriteViewModel, onMovieClick: (String) -> Unit) {
+
     val favoriteMovies = viewModel.favoriteMovies.collectAsState()
     val lazyListState = rememberLazyListState()
 

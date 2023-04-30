@@ -1,13 +1,21 @@
 package com.example.mad_movie_app.models
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.mad_movie_app.data.Genre
 import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.data.MovieRepository
+import com.example.mad_movie_app.data.loadMovies
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AddMovieScreenViewModel(movieRepository: MovieRepository) : BaseMovieViewModel(movieRepository) {
+class AddMovieScreenViewModel(movieRepository: MovieRepository, private val sharedFavoriteViewModel: SharedFavoriteViewModel) : MovieViewModel(movieRepository, sharedFavoriteViewModel)
+ {
+
+    private val _movies = MutableStateFlow(loadMovies())
+    override val movies: StateFlow<List<Movie>> = _movies
+
     private val _isFormValid = MutableStateFlow(false)
     val isFormValid: StateFlow<Boolean> = _isFormValid
 
@@ -20,17 +28,22 @@ class AddMovieScreenViewModel(movieRepository: MovieRepository) : BaseMovieViewM
         plot: String,
         rating: Float?
     ) {
-        val isValid = title.isNotBlank() && year.isNotBlank() && genres.isNotEmpty() &&
-                director.isNotBlank() && actors.isNotBlank() && plot.isNotBlank() &&
-                (rating != null && rating in 0.0..10.0)
+        val selectedGenres = genres.mapNotNull { genreTitle -> Genre.values().firstOrNull { it.toString() == genreTitle } }
 
-        _isFormValid.value = isValid
+        _isFormValid.value =
+            title.isNotEmpty() &&
+                    year.isNotEmpty() &&
+                    selectedGenres.isNotEmpty()
+                    && director.isNotEmpty() &&
+                    actors.isNotEmpty() && rating != null
     }
 
     fun addMovie(movie: Movie) {
         viewModelScope.launch {
-            movieRepository.addMovie(movie)
+            movieRepository.addMovie(movie) // Use the repository to add a movie
         }
+        _movies.value = _movies.value.plus(movie)
+        Log.d(MovieViewModel.TAG, "Movie added: $movie")
     }
 }
 

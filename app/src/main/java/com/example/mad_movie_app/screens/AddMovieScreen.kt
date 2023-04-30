@@ -21,13 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
+import com.example.mad_movie_app.models.AddMovieScreenViewModel
 import com.example.mad_movie_app.navigation.SimpleAppBar
 import java.util.*
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddMovieScreen(navController: NavHostController, viewModel: MovieViewModel, modifier: Modifier = Modifier) {
+fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenViewModel, modifier: Modifier = Modifier) {
 
     val isFormValid by viewModel.isFormValid.collectAsState(initial = false)
 

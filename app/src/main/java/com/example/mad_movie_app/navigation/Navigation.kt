@@ -1,12 +1,15 @@
 package com.example.mad_movie_app.navigation
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.mad_movie_app.models.MovieViewModel
+import com.example.mad_movie_app.data.Movie
+import com.example.mad_movie_app.data.MovieRepository
+import com.example.mad_movie_app.models.*
 import com.example.mad_movie_app.screens.AddMovieScreen
 import com.example.mad_movie_app.screens.DetailScreen
 import com.example.mad_movie_app.screens.FavoriteScreen
@@ -20,32 +23,50 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun MyNavigation(viewModel: MovieViewModel) {
-
+fun MyNavigation(
+    viewModel: MovieViewModel,
+    addMovieScreenViewModel: AddMovieScreenViewModel,
+    sharedFavoriteViewModel: SharedFavoriteViewModel,
+    movieRepository: MovieRepository
+) {
     val navController = rememberNavController()
+    val context = LocalContext.current
 
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
-            HomeScreen(navController = navController, viewModel = viewModel)
+            HomeScreen(
+                navController = navController,
+                viewModel = viewModel,
+                sharedFavoriteViewModel = sharedFavoriteViewModel
+            )
         }
         composable(
             Screen.Detail.route,
             arguments = listOf(navArgument("movieId") { type = NavType.StringType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getString("movieId")
-            val selectedMovie = viewModel.movies.collectAsState().value.find { it.id == movieId }
+            val movie = movieRepository.getMovieById(movieId = movieId!!).collectAsState(initial = null).value
+            val detailScreenViewModel = DetailScreenViewModel(movieRepository, movieId, sharedFavoriteViewModel)
             DetailScreen(
                 navController = navController,
-                movie = selectedMovie,
-                viewModel = viewModel
+                movie = movie,
+                detailScreenViewModel = detailScreenViewModel,
+                sharedFavoriteViewModel = sharedFavoriteViewModel
             )
         }
         composable(Screen.Favorite.route) {
-            FavoriteScreen(navController = navController, viewModel = viewModel, onMovieClick = { movieId ->
-                navController.navigate(Screen.Detail.route.replace("{movieId}", movieId))})
+            // Pass the favoriteViewModel to the FavoriteScreen composable function
+            FavoriteScreen(
+                navController = navController,
+                viewModel = sharedFavoriteViewModel,
+                onMovieClick = { movieId ->
+                    navController.navigate(Screen.Detail.route.replace("{movieId}", movieId))
+                }
+            )
         }
         composable(Screen.AddMovie.route) {
-            AddMovieScreen(navController = navController, viewModel = viewModel)
+            // Pass the addMovieScreenViewModel to the AddMovieScreen composable function
+            AddMovieScreen(navController = navController, viewModel = addMovieScreenViewModel)
         }
     }
 }

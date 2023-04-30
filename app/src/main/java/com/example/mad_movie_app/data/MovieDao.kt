@@ -31,7 +31,7 @@ interface MovieDao {
     suspend fun toggleFavorite(movieId: String)
 
     @Query("SELECT favorite FROM movies WHERE id = :movieId")
-    fun isFavoriteMovie(movieId: String): Boolean
+    fun isFavoriteMovie(movieId: String): Boolean?
 
     @Query("SELECT * FROM movies WHERE favorite = 1")
     fun getFavoriteMovies(): Flow<List<Movie>>

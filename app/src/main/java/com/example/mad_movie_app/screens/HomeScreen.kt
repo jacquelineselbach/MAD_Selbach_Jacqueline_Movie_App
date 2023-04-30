@@ -6,11 +6,16 @@ import androidx.navigation.NavController
 import com.example.mad_movie_app.components.MovieList
 import com.example.mad_movie_app.data.MovieViewState
 import com.example.mad_movie_app.models.MovieViewModel
+import com.example.mad_movie_app.models.SharedFavoriteViewModel
 import com.example.mad_movie_app.navigation.Screen
 import com.example.mad_movie_app.navigation.TopBar
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: MovieViewModel) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: MovieViewModel,
+    sharedFavoriteViewModel: SharedFavoriteViewModel
+) {
     // Observe the movies from the ViewModel
     val movies by viewModel.movies.collectAsState(emptyList())
     val favoriteMovies by viewModel.favoriteMovies.collectAsState(emptyList())
@@ -38,7 +43,7 @@ fun HomeScreen(navController: NavController, viewModel: MovieViewModel) {
                 navController.navigate(Screen.Detail.route.replace("{movieId}", movieId))
             }
         ) { movieId: String ->
-            viewModel.toggleFavorite(movieId)
+            sharedFavoriteViewModel.toggleFavorite(movieId)
         }
     }
 }
