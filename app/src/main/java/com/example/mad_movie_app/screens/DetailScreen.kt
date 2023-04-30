@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +32,7 @@ fun DetailScreen(
     sharedFavoriteViewModel: SharedFavoriteViewModel
 ) {
     val isExpanded = remember { mutableStateOf(false) }
-    val isFavorite = rememberSaveable { mutableStateOf(detailScreenViewModel.isFavoriteMovie(movie?.id ?: "")) }
+    val isFavorite by remember(movie?.id) { derivedStateOf { sharedFavoriteViewModel.isFavoriteMovie(movie?.id ?: "") } }
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -54,12 +53,10 @@ fun DetailScreen(
         movie?.let {
             MovieCard(
                 movie = it,
-                isFavorite = isFavorite.value,
+                isFavorite = isFavorite,
                 onMovieClick = {},
                 onFavoriteClick = {
-                    detailScreenViewModel.toggleFavorite()
-                    isFavorite.value = detailScreenViewModel.isFavoriteMovie(movie.id)
-                    detailScreenViewModel.updateMovie(movie.copy(favorite = isFavorite.value))
+                    sharedFavoriteViewModel.toggleFavorite(it.id)
                 },
                 isExpanded = isExpanded
             ) { isExpanded.value = !isExpanded.value }
