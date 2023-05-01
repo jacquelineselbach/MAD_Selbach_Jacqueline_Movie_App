@@ -27,7 +27,10 @@ import com.example.mad_movie_app.ui.theme.weight
  */
 
 @Composable
-fun MovieCardDetails(movie: Movie, isExpanded: Boolean, onClick: () -> Unit) {
+fun MovieCardDetails(
+    movie: Movie,
+    isExpanded: Boolean,
+    onClick: () -> Unit) {
 
     // create row to display the movie title and expand/collapse icon
 

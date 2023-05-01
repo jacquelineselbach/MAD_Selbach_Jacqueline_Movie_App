@@ -33,11 +33,11 @@ fun MovieCard(
     onExpandClick: () -> Unit
 ) {
 
-    // remember the favorite state of the movie
+    // remember favorite state
 
     val isFavoriteState = remember { mutableStateOf(isFavorite) }
 
-    // create card component for the movie
+    // create card component
 
     Card(
         modifier = Modifier
@@ -48,7 +48,7 @@ fun MovieCard(
     ) {
         Column {
 
-            // display movie poster with a favorite toggle
+            // display movie poster with favorite toggle icon
 
             MoviePoster(
                 posterUrl = movie.images.firstOrNull() ?: "https://www.saugertieslighthouse.com/slc/wp-content/themes/u-design/assets/images/placeholders/post-placeholder.jpg",

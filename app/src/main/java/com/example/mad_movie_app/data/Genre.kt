@@ -4,6 +4,7 @@ package com.example.mad_movie_app.data
  * Enum class representing the various movie genres available.
  * Each genre value is mapped to its corresponding human-readable string representation.
  */
+
 enum class Genre {
     ACTION,
     ADVENTURE,

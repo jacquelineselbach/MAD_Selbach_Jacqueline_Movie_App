@@ -14,8 +14,10 @@ import com.example.mad_movie_app.models.SharedFavoriteViewModel
  */
 
 class AddMovieScreenFactory(
+
     private val movieRepository: MovieRepository,
     private val sharedFavoriteViewModel: SharedFavoriteViewModel
+
 ) : ViewModelProvider.Factory {
 
     /**

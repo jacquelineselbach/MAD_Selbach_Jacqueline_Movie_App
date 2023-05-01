@@ -44,6 +44,26 @@ class MovieRepository(private val movieDao: MovieDao) {
     }
 
     /**
+     * Inserts a list of movies into the database.
+     *
+     * @param movies The list of [Movie] objects to be inserted into the database.
+     */
+
+    suspend fun insertMovies(movies: List<Movie>) {
+        movieDao.insertAll(movies)
+    }
+
+    /**
+     * Retrieves the total number of movies in the database.
+     *
+     * @return total number of movies in the database as [Int]
+     */
+
+    suspend fun getMovieCount(): Int {
+        return movieDao.getMovieCount()
+    }
+
+    /**
      * Get a movie by its ID from the database.
      *
      * @param movieId The ID of the movie to be fetched.

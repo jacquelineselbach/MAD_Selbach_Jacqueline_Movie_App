@@ -1,6 +1,7 @@
 package com.example.mad_movie_app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +23,7 @@ import com.example.mad_movie_app.ui.theme.MAD_Movie_AppTheme
 class MainActivity : ComponentActivity() {
 
     // declare late initialization view model properties
+
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var detailScreenViewModel: DetailScreenViewModel
     private lateinit var addMovieScreenViewModel: AddMovieScreenViewModel
@@ -31,6 +33,8 @@ class MainActivity : ComponentActivity() {
     // called when activity is created
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Log.d("MainActivity", "onCreate")
 
         // invoke the parent class's implementation of the onCreate method
         // perform default initialization of the activity
@@ -98,25 +102,39 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /*
+
     /** onStart(): called when the activity is starting */
+
     override fun onStart() {
-        super.onStart() }
+        super.onStart()
+        Log.d("MainActivity", "onStart")
+    }
 
     /** onResume(): called when the activity is becoming visible to the user */
+
     override fun onResume() {
         super.onResume()
+        Log.d("MainActivity", "onResume")
     }
     /** onPause(): called when the activity is going into the background, but has not been killed */
+
     override fun onPause() {
-        super.onPause() }
+        super.onPause()
+        Log.d("MainActivity", "onPause")
+    }
 
     /** onStop(): called when the activity is no longer visible to the user */
+
     override fun onStop() {
-        super.onStop() }
+        super.onStop()
+        Log.d("MainActivity", "onStop")
+    }
 
     /** onDestroy(): called when the activity is being destroyed */
+
     override fun onDestroy() {
-        super.onDestroy() }
-     */
+        super.onDestroy()
+        Log.d("MainActivity", "onDestroy")
+    }
+
 }

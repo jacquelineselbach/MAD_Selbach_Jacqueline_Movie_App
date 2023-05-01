@@ -15,9 +15,12 @@ import kotlinx.coroutines.launch
  * @param sharedFavoriteViewModel A SharedFavoriteViewModel instance to manage favorite movies.
  */
 
-class DetailScreenViewModel(movieRepository: MovieRepository, movieId: String, sharedFavoriteViewModel: SharedFavoriteViewModel) : MovieViewModel(movieRepository, sharedFavoriteViewModel) {
-
-    // declare private MutableStateFlow to hold a single movie object for the detail screen
+class DetailScreenViewModel(
+    movieRepository: MovieRepository,
+    movieId: String, sharedFavoriteViewModel: SharedFavoriteViewModel) : MovieViewModel(movieRepository,
+    sharedFavoriteViewModel
+) {
+    // declare private MutableStateFlow to hold a single movie object  for the detail screen
 
     private val _movie = MutableStateFlow<Movie?>(null)
 

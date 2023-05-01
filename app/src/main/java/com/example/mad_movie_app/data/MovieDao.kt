@@ -77,7 +77,7 @@ interface MovieDao {
      */
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovies(movies: List<Movie>)
+    suspend fun insertAll(movies: List<Movie>)
 
     /**
      * Toggles the favorite status of a movie with the specified movie ID.

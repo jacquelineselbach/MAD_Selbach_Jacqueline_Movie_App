@@ -15,9 +15,11 @@ import com.example.mad_movie_app.models.SharedFavoriteViewModel
  */
 
 class DetailScreenFactory(
+
     private val movieRepository: MovieRepository,
     private val movieId: String,
     private val sharedFavoriteViewModel: SharedFavoriteViewModel
+
 ) : ViewModelProvider.Factory {
 
     /**
@@ -27,6 +29,7 @@ class DetailScreenFactory(
      * @return A newly created ViewModel of the given class.
      * @throws IllegalArgumentException If the requested ViewModel class is unknown.
      */
+
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DetailScreenViewModel::class.java)) {

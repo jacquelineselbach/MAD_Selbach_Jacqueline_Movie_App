@@ -19,8 +19,10 @@ import com.example.mad_movie_app.navigation.TopBar
  */
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: MovieViewModel, sharedFavoriteViewModel: SharedFavoriteViewModel) {
-
+fun HomeScreen(navController: NavController,
+               viewModel: MovieViewModel,
+               sharedFavoriteViewModel: SharedFavoriteViewModel
+) {
     // observe movies from the ViewModel and collectAsState
 
     val movies by viewModel.movies.collectAsState(emptyList())

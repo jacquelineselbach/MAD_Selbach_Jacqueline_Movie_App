@@ -27,8 +27,10 @@ import com.example.mad_movie_app.navigation.SimpleAppBar
  */
 
 @Composable
-fun FavoriteScreen(navController: NavHostController, viewModel: SharedFavoriteViewModel, onMovieClick: (String) -> Unit) {
-
+fun FavoriteScreen(navController: NavHostController,
+                   viewModel: SharedFavoriteViewModel,
+                   onMovieClick: (String) -> Unit
+) {
     // observe the favorite movies from the ViewModel
 
     val favoriteMovies = viewModel.favoriteMovies.collectAsState()

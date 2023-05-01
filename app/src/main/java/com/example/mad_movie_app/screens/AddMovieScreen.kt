@@ -35,8 +35,9 @@ import java.util.*
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenViewModel) {
-
+fun AddMovieScreen(navController: NavHostController,
+                   viewModel: AddMovieScreenViewModel
+) {
     // viewModel.isFormValid is a Flow<Boolean> property from the ViewModel that represents validity of a form
     // "by" keyword lets isFormValid property automatically update whenever the viewModel.isFormValid emits new value
     // initial value of isFormValid will be false until the first emission from the viewModel.isFormValid Flow is received
@@ -176,9 +177,15 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
             isError = false
         )
 
-        // update ViewModel whenever form values change
+        // LaunchedEffect is being used to run the viewModel.updateForm function
+        // whenever any of the keys (title, year, genreItems, director, actors, plot, rating) change
+        // code inside LaunchedEffect will be executed in a new coroutine
+        // ensuring that the UI remains responsive during the update.
 
         LaunchedEffect(title, year, genreItems, director, actors, plot, rating) {
+
+            // update ViewModel whenever form values change
+
             viewModel.updateForm(
                 title = title,
                 year = year,

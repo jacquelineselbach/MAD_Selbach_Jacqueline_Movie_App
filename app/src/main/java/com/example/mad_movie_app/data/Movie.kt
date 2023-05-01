@@ -189,6 +189,11 @@ fun getMovies(): List<Movie> {
         )
 }
 
+/**
+ * Retrieves and returns the list of movies.
+ * @return list containing all the [Movie] objects.
+ */
+
 fun loadMovies(): List<Movie> {
     return getMovies()
 }

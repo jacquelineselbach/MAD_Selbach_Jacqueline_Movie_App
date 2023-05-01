@@ -15,7 +15,11 @@ import kotlinx.coroutines.launch
  * @param sharedFavoriteViewModel A SharedFavoriteViewModel instance to manage favorite movies.
  */
 
-class AddMovieScreenViewModel(movieRepository: MovieRepository, private val sharedFavoriteViewModel: SharedFavoriteViewModel) : MovieViewModel(movieRepository, sharedFavoriteViewModel) {
+class AddMovieScreenViewModel(
+    movieRepository: MovieRepository,
+    private val sharedFavoriteViewModel: SharedFavoriteViewModel) : MovieViewModel(movieRepository,
+    sharedFavoriteViewModel
+) {
 
     // declare private MutableStateFlow to hold the form validation state
 

@@ -84,10 +84,12 @@ fun Navigation(
 }
 
 // sealed classes for screens - restricts number of possible subclasses
+
 sealed class Screen(val route: String) {
 
     // four subclasses: Home, Detail, Favorite, and AddMovie
     // subclasses are defined as object declarations, which means they are singletons
+
     object Home : Screen("homescreen")
     object Detail : Screen("detailscreen/{movieId}")
     object Favorite : Screen("favoritescreen")
