@@ -18,8 +18,18 @@ import com.example.mad_movie_app.ui.theme.horizontalPadding
 import com.example.mad_movie_app.ui.theme.verticalPadding
 import com.example.mad_movie_app.ui.theme.weight
 
+/**
+ * A composable function that displays the details of a movie card.
+ *
+ * @param movie The Movie object containing the movie details.
+ * @param isExpanded A boolean indicating if the movie card details are expanded or not.
+ * @param onClick A lambda function to be executed when the expand/collapse icon is clicked.
+ */
+
 @Composable
 fun MovieCardDetails(movie: Movie, isExpanded: Boolean, onClick: () -> Unit) {
+
+    // create row to display the movie title and expand/collapse icon
 
     Row(
         modifier = Modifier
@@ -34,6 +44,8 @@ fun MovieCardDetails(movie: Movie, isExpanded: Boolean, onClick: () -> Unit) {
             modifier = Modifier.clickable(onClick = onClick)
         )
     }
+
+    // if card is expanded, display the movie details
 
     if (isExpanded) {
 
@@ -57,6 +69,14 @@ fun MovieCardDetails(movie: Movie, isExpanded: Boolean, onClick: () -> Unit) {
         }
     }
 }
+
+/**
+ * Builds an AnnotatedString with a bold label and regular value.
+ *
+ * @param label The label to be displayed in bold.
+ * @param value The value to be displayed with regular font weight.
+ * @return An AnnotatedString containing the label and value.
+ */
 
 @Composable
 fun buildAnnotatedString(label: String, value: String): AnnotatedString {

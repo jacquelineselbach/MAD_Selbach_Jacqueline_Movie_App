@@ -4,6 +4,20 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * This class represents a Movie object with its properties
+ * @property id Unique identifier of the movie
+ * @property title Title of the movie
+ * @property year Release year of the movie
+ * @property director Director of the movie
+ * @property genres Genres of the movie
+ * @property plot Plot of the movie
+ * @property actors Actors in the movie
+ * @property rating Rating of the movie
+ * @property images List of images for the movie
+ * @property favorite Flag to indicate if the movie is in favorites list
+ */
+
 @Entity(tableName = "movies")
 data class Movie(
     @PrimaryKey
@@ -29,9 +43,11 @@ data class Movie(
     val favorite: Boolean = false
 )
 
-fun getDefaultMovies(): List<Movie> {
-    return getMovies()
-}
+/**
+ * Returns a list of movies.
+ *
+ * @return the list of movies
+ */
 
 fun getMovies(): List<Movie> {
     return listOf(
@@ -176,3 +192,27 @@ fun getMovies(): List<Movie> {
 fun loadMovies(): List<Movie> {
     return getMovies()
 }
+
+/**
+ * MovieViewState is a data class representing the state of a movie within the application.
+ *
+ * @param movie A Movie instance containing the movie data.
+ * @param isFavorite A boolean flag indicating if the movie is marked as a favorite. Default value is false.
+ */
+
+data class MovieViewState(
+    val movie: Movie,
+    var isFavorite: Boolean = false
+)
+
+/**
+ * ListItemSelectable represents a selectable item in a list, containing a title and a selection state.
+ *
+ * @param title The title of the list item.
+ * @param isSelected A boolean indicating whether the list item is currently selected.
+ */
+
+data class ListItemSelectable(
+    val title: String,
+    val isSelected: Boolean
+)

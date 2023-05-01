@@ -17,14 +17,16 @@ import kotlinx.coroutines.launch
 
 class SharedFavoriteViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
-    // Declare a private MutableStateFlow to hold the favorite movies set
+    // declare private MutableStateFlow to hold the favorite movies
+
     private val _favoriteMovies = MutableStateFlow<Set<Movie>>(emptySet())
 
-    // Expose an immutable StateFlow to provide access to the favorite movies set
+    // expose immutable StateFlow to provide access to the favorite movies list
+
     val favoriteMovies: StateFlow<Set<Movie>>
         get() = _favoriteMovies
 
-    // Initialize the ViewModel by loading favorite movies from the repository
+    // initialize ViewModel by loading favorite movies from the repository
     init {
         viewModelScope.launch {
             movieRepository.getFavoriteMovies().collect { movies ->

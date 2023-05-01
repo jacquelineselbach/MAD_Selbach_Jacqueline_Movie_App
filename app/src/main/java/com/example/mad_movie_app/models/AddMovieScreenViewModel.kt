@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.mad_movie_app.data.Genre
 import com.example.mad_movie_app.data.Movie
 import com.example.mad_movie_app.data.MovieRepository
-import com.example.mad_movie_app.data.loadMovies
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,16 +17,12 @@ import kotlinx.coroutines.launch
 
 class AddMovieScreenViewModel(movieRepository: MovieRepository, private val sharedFavoriteViewModel: SharedFavoriteViewModel) : MovieViewModel(movieRepository, sharedFavoriteViewModel) {
 
-    // Declare a private MutableStateFlow to hold the list of movies
-    private val _movies = MutableStateFlow(loadMovies())
+    // declare private MutableStateFlow to hold the form validation state
 
-    // Expose an immutable StateFlow to provide access to the list of movies
-    override val movies: StateFlow<List<Movie>> = _movies
-
-    // Declare a private MutableStateFlow to hold the form validation state
     private val _isFormValid = MutableStateFlow(false)
 
-    // Expose an immutable StateFlow to provide access to the form validation state
+    // expose immutable StateFlow to provide access to the form validation state
+
     val isFormValid: StateFlow<Boolean> = _isFormValid
 
     /**
@@ -51,10 +46,13 @@ class AddMovieScreenViewModel(movieRepository: MovieRepository, private val shar
         plot: String,
         rating: Float?
     ) {
-        // Convert the list of genre titles to a list of Genre objects
+
+        // convert the list of genre titles to a list of Genre objects
+
         val selectedGenres = genres.mapNotNull { genreTitle -> Genre.values().firstOrNull { it.toString() == genreTitle } }
 
-        // Update the form validation state based on the input field values
+        // update the form validation state based on the input field values
+
         _isFormValid.value =
             title.isNotEmpty() &&
                     year.isNotEmpty() &&
@@ -72,8 +70,11 @@ class AddMovieScreenViewModel(movieRepository: MovieRepository, private val shar
 
     fun addMovie(movie: Movie) {
         viewModelScope.launch {
-            movieRepository.addMovie(movie) // Use the repository to add a movie
+            movieRepository.addMovie(movie)
         }
-        _movies.value = _movies.value.plus(movie)
+
+        // call addMovieToList from parent class
+
+        addMovieToList(movie)
     }
 }

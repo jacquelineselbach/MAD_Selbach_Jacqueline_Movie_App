@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
  * @param onBackClick lambda function to be executed when the back icon is clicked.
  * @param coroutineScope the CoroutineScope used for launching the onDeleteClick lambda in a coroutine.
  */
+
 @Composable
 fun DeleteAppBar(
     title: String,
@@ -26,19 +27,26 @@ fun DeleteAppBar(
     onBackClick: () -> Unit,
     coroutineScope: CoroutineScope
 ) {
-    // TopAppBar containing title, back icon, and delete icon
     TopAppBar(
         title = { Text(text = title) },
         navigationIcon = {
-            // Back icon with a click listener
+
+            // back icon with a click listener
+
             IconButton(onClick = onBackClick) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {
+
             // delete icon with a click listener
+
             IconButton(onClick = {
+
                 // launch the onDeleteClick lambda in a coroutine
+                // is an extension function on CoroutineScope that starts a new coroutine
+                // coroutine runs concurrently with other code - onDeleteClick() function inside the coroutine is executed asynchronously
+
                 coroutineScope.launch {
                     onDeleteClick()
                 }

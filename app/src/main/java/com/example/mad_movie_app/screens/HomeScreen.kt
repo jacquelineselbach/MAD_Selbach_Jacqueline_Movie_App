@@ -13,23 +13,26 @@ import com.example.mad_movie_app.navigation.TopBar
 /**
  * Composable function that displays the Home screen of the app.
  *
- * @param navController the navigation controller used to navigate to other screens.
- * @param viewModel the [MovieViewModel] used to fetch and manage movies data.
- * @param sharedFavoriteViewModel the [SharedFavoriteViewModel] used to manage the favorite movies data.
+ * @param navController The navigation controller used to navigate to other screens.
+ * @param viewModel The [MovieViewModel] used to fetch and manage movies data.
+ * @param sharedFavoriteViewModel The [SharedFavoriteViewModel] used to manage the favorite movies data.
  */
 
 @Composable
 fun HomeScreen(navController: NavController, viewModel: MovieViewModel, sharedFavoriteViewModel: SharedFavoriteViewModel) {
 
     // observe movies from the ViewModel and collectAsState
+
     val movies by viewModel.movies.collectAsState(emptyList())
 
     // transform movies to a list of MovieViewState objects
     // by passing movies list as the key for the remember() function,
     // movieViewStateObjects will only be recomputed if the movies list changes
+
     val movieViewStateObjects by remember(movies) {
 
         // derived state is used to update the UI whenever the list of movies changes
+
         derivedStateOf {
             if (movies.isNotEmpty()) {
                 movies.map { movie ->
@@ -42,20 +45,25 @@ fun HomeScreen(navController: NavController, viewModel: MovieViewModel, sharedFa
     }
 
     Column {
+
         // show top bar with the favorite and add movie buttons
+
         TopBar(
             onFavoriteClick = { navController.navigate(Screen.Favorite.route) },
             onAddClick = { navController.navigate(Screen.AddMovie.route) }
         )
 
         // show the list of movies
+
         MovieList(
             movieViewStates = movieViewStateObjects,
             onMovieClick = { movieId: String ->
                 navController.navigate(Screen.Detail.route.replace("{movieId}", movieId))
             }
         ) { movieId: String ->
+
             // toggle the favorite status of the movie when the favorite button is clicked
+
             sharedFavoriteViewModel.toggleFavorite(movieId)
         }
     }

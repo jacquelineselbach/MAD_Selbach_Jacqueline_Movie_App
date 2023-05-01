@@ -20,23 +20,30 @@ import androidx.compose.ui.Alignment
 fun TopBar(onFavoriteClick: () -> Unit, onAddClick: () -> Unit) {
 
     // declare and initialize mutable state to control visibility of the dropdown menu
+
     var showMenu by remember { mutableStateOf(false) }
 
     // create a TopAppBar with title and actions
+
     TopAppBar(
         title = { Text("Movies") },
         actions = {
+
             // add IconButton with moreVert icon to toggle the dropdown menu
+
             IconButton(onClick = { showMenu = !showMenu }) {
                 Icon(Icons.Filled.MoreVert, contentDescription = "Show menu")
             }
-            // create a DropdownMenu with two menu items: Favorites and Add Movie
+
+            // create DropdownMenu with two menu items: Favorites and Add Movie
+
             DropdownMenu(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false }
             ) {
 
                 // add DropdownMenuItem for Favorites action
+
                 DropdownMenuItem(onClick = onFavoriteClick) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.Favorite, contentDescription = "Favorites")
@@ -45,6 +52,7 @@ fun TopBar(onFavoriteClick: () -> Unit, onAddClick: () -> Unit) {
                 }
 
                 // add DropdownMenuItem for Add Movie action
+
                 DropdownMenuItem(onClick = onAddClick) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.Add, contentDescription = "Add Movie")

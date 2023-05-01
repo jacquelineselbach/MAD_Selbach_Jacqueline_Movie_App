@@ -10,7 +10,7 @@ import com.example.mad_movie_app.data.MovieDatabase
 import com.example.mad_movie_app.data.MovieRepository
 import com.example.mad_movie_app.factories.*
 import com.example.mad_movie_app.models.*
-import com.example.mad_movie_app.navigation.MyNavigation
+import com.example.mad_movie_app.navigation.Navigation
 import com.example.mad_movie_app.ui.theme.MAD_Movie_AppTheme
 
 /**
@@ -27,41 +27,55 @@ class MainActivity : ComponentActivity() {
     private lateinit var addMovieScreenViewModel: AddMovieScreenViewModel
 
 
-    // override onCreate method of ComponentActivity class, which is called when the activity is being created
+    // override onCreate method of ComponentActivity class
+    // called when activity is created
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        // invokes the parent class's implementation of the onCreate method, which performs the default initialization of the activity
+
+        // invoke the parent class's implementation of the onCreate method
+        // perform default initialization of the activity
+
         super.onCreate(savedInstanceState)
 
-        // instantiate the database
+        // instantiate database
+
         val database = MovieDatabase.getInstance(this)
 
         // get MovieDao instance from database
+
         val movieDao: MovieDao = database.movieDao()
 
-        // instantiate the repository with the MovieDao instance
+        // instantiate repository with MovieDao instance
+
         val repository = MovieRepository(movieDao)
 
-        // instantiate the SharedFavoriteViewModel
+        // instantiate SharedFavoriteViewModel
+
         val sharedFavoriteViewModel = ViewModelProvider(this, FavoriteFactory(repository))[SharedFavoriteViewModel::class.java]
 
         // instantiate other ViewModels and pass SharedFavoriteViewModel
+
         movieViewModel = ViewModelProvider(this, MovieViewModelFactory(repository, sharedFavoriteViewModel))[MovieViewModel::class.java]
         addMovieScreenViewModel = ViewModelProvider(this, AddMovieScreenFactory(repository, sharedFavoriteViewModel))[AddMovieScreenViewModel::class.java]
 
         setContent {
 
-            // set content of top-level compose function
+            // set content of top-level compose function MAD_Movie_AppTheme
+
             MAD_Movie_AppTheme {
 
                 // initialize navController
+
                 val navController = rememberNavController()
 
-                // navController.currentBackStackEntry returns the topmost entry on the back stack, which represents the current screen
+                // navController.currentBackStackEntry returns the topmost entry on the back stack
+                // destination property returns the current destination of the navigation represented by NavDestination object
+                // route property of NavDestination object returns unique identifier for the destination
+
                 val currentRoute = navController.currentBackStackEntry?.destination?.route
-                // destination property of this entry returns the current destination of the navigation, which is represented by NavDestination object
-                // route property of the NavDestination object returns the unique identifier for the destination, which is a string value
 
                 // get movieId from the route arguments
+
                 val movieId = if (currentRoute == "detail") {
                     navController.currentBackStackEntry?.arguments?.getString("movieId")
                 } else {
@@ -69,6 +83,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 // if not null instantiate the DetailScreenViewModel using the ViewModelProvider
+
                 if (movieId != null) {
                     detailScreenViewModel = ViewModelProvider(
                         this,
@@ -77,7 +92,8 @@ class MainActivity : ComponentActivity() {
                 }
 
                 // create an instance of the MyNavigation Composable function
-                MyNavigation(movieViewModel, addMovieScreenViewModel, sharedFavoriteViewModel, repository)
+
+                Navigation(movieViewModel, addMovieScreenViewModel, sharedFavoriteViewModel, repository)
             }
         }
     }

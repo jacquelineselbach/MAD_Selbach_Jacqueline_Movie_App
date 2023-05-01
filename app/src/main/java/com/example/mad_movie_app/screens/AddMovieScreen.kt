@@ -28,13 +28,18 @@ import java.util.*
  * AddMovieScreen is a composable function that renders the Add Movie screen.
  * It takes a NavHostController and a ViewModel as arguments.
  *
- * @param navController the navigation controller used to navigate to other screens.
- * @param viewModel the AddMovieScreenViewModel for managing screen state.
+ * @param navController The navigation controller used to navigate to other screens.
+ * @param viewModel The AddMovieScreenViewModel for managing screen state.
  */
+
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenViewModel) {
+
+    // viewModel.isFormValid is a Flow<Boolean> property from the ViewModel that represents validity of a form
+    // "by" keyword lets isFormValid property automatically update whenever the viewModel.isFormValid emits new value
+    // initial value of isFormValid will be false until the first emission from the viewModel.isFormValid Flow is received
 
     val isFormValid by viewModel.isFormValid.collectAsState(initial = false)
 
@@ -51,7 +56,8 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
             }
         }
 
-        // Variables to store user input
+        // variables to store user input
+
         var title by remember { mutableStateOf("Title") }
         var year by remember { mutableStateOf("2023") }
         val genres = Genre.values().toList()
@@ -72,7 +78,8 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
         var plot by remember { mutableStateOf("Plot") }
         var rating by remember { mutableStateOf("9.9") }
 
-        // Text fields to get user input
+        // text fields to get user input
+
         OutlinedTextField(
             title, { title = it }, Modifier.fillMaxWidth(),
             singleLine = true,
@@ -89,7 +96,8 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
             isError = false
         )
 
-        // Genre selection
+        // genre selection
+
         Text(
             modifier = Modifier.padding(top = 4.dp),
             text = stringResource(R.string.select_genres),
@@ -121,7 +129,8 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
             }
         }
 
-        // Text fields for director, actors, and plot
+        // text fields for director, actors, and plot
+
         OutlinedTextField(
             value = director,
             singleLine = true,
@@ -150,7 +159,8 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
             isError = false
         )
 
-        // Text field for movie rating
+        // text field for movie rating
+
         OutlinedTextField(
             value = rating,
             singleLine = true,
@@ -166,7 +176,8 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
             isError = false
         )
 
-        // Update ViewModel whenever form values change
+        // update ViewModel whenever form values change
+
         LaunchedEffect(title, year, genreItems, director, actors, plot, rating) {
             viewModel.updateForm(
                 title = title,
@@ -179,7 +190,8 @@ fun AddMovieScreen(navController: NavHostController, viewModel: AddMovieScreenVi
             )
         }
 
-        // Add movie button
+        // add movie button (only enabled if form is valid)
+
         Button(
             enabled = isFormValid,
             onClick = {

@@ -17,10 +17,12 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun SimpleAppBar(title: String, onBackClick: () -> Unit) {
-    // create TopAppBar with a title and a navigation icon
+
     TopAppBar(
         title = { Text(text = title) },
+
         // add back button as the navigation icon with a click listener
+
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
